@@ -6,7 +6,7 @@ export default function LoginPage() {
     // const [remember_me, setRememberMe] = useState(() => localStorage.getItem('remember_me') !== 'false');
     const [error, setError] = useState('');
 
-    reutrn (
+    return (
         <div className="min-h-screen bg-[#F9F6F0] text-[#333333] selection:bg-[#6B8E23]/20 flex flex-col font-sans relative overlow-hidden">
             <header className="w-full p-6 flex justify-between items-center z-10">
                 <div className="flex flex-col items-start">

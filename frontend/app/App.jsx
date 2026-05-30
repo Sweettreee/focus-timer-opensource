@@ -1,14 +1,13 @@
-import { useState } from 'react'
-import loginPage from '../features/auth/loginPage'
+import LoginPage from "../features/auth/LoginPage";
 
 function App() {
-  return <loginPage />
+  return <LoginPage />;
 
-  return (
-    <>
-      <p>hello world</p>
-    </>
-  )
+  // return (
+  //   <>
+  //     <p>hello world</p>
+  //   </>
+  // )
 }
 
-export default App
+export default App;
