@@ -2,17 +2,13 @@ import { useState } from "react";
 import { AlertCircle, Compass } from "lucide-react";
 
 export default function LoginPage() {
-  // const { login } = useAuthController();
-  // const { goTo } = useNavController();
-  // const onBack = () => goTo('focus');
-
   const [email, setEmail] = useState(
     () => localStorage.getItem("logined_email") || "",
   );
   const [password, setPassword] = useState(
     () => localStorage.getItem("logined_password") || "",
   );
-  // const [rememberMe, setRememberMe] = useState
+
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
@@ -27,15 +23,6 @@ export default function LoginPage() {
       return;
     }
     setError("");
-
-    try {
-      // await login({ email, password })
-      // 자동 로그인 유지
-      localStorage.setItem(email);
-      localStorage.setItem(password);
-    } catch (err) {
-      setError(err.message || "로그인 중 오류가 발생했습니다");
-    }
   };
 
   return (
@@ -44,7 +31,6 @@ export default function LoginPage() {
         <div className="flex flex-col items-start">
           <h1
             className="text-2xl font-bold tracking-wider text-[#4A5D4E] cursor-pointer hover:opacity-85 select-none"
-            // onClick={onBack}
             title="홈 화면으로 이동"
           >
             FOCUS ROOM
@@ -113,7 +99,6 @@ export default function LoginPage() {
                 </label>
                 <button
                   type="button"
-                  // onClick={() => alert("알림: 가입하신 이메일로 비밀번호 재설정 메일이 전송되었습니다")}
                   className="text-[9px] text-[#6B8E23] hover:text-[#4A5D4E] hover:underline tracking-wide"
                 >
                   비밀번호 찾기
@@ -149,10 +134,7 @@ export default function LoginPage() {
 
           {/* 가입링크 */}
           <div className="text-center pt-2">
-            <button
-              // onClick={() => goTo("register")}
-              className="text-[10px] font-bold text-[#6B8E23] hover:text-[#4A5D4E] transition border-b border-dashed border-[#6B8E23] pb-0.5 tracking-wider"
-            >
+            <button className="text-[10px] font-bold text-[#6B8E23] hover:text-[#4A5D4E] transition border-b border-dashed border-[#6B8E23] pb-0.5 tracking-wider">
               처음이신가요? 회원가입하기 〉
             </button>
           </div>
