@@ -7,7 +7,7 @@ constructor(){
 
 init(){
     //이미 객체들이 생성되어 있다면 중복 생성을 방지하기 위해 리턴
-    if(Objeect.keys(this.audios).length>0) return;
+    if(Object.keys(this.audios).length>0) return;
     this.audios ={
       rain: new Audio('/sounds/rain.mp3'),
       forest: new Audio('/sounds/forest.mp3'),
@@ -19,7 +19,7 @@ init(){
     Object.keys(this.audios).forEach((key)=>{
         const audio = this.audios[key]; //각각의 오디오에 대해서 루프를 적용하고 볼륨을 0으로 만드는 초기세팅
         audio.loop = true;
-        audio.voloume = 0;
+        audio.volume = 0;
     });
 }
 start(){
@@ -27,7 +27,7 @@ start(){
     Object.keys(this.audios).forEach((key)=>{
         const audio = this.audios[key];
         audio.play().catch((err)=>{
-            console.warn('Autoplay blocked or play failed for ${key}',err);
+            console.warn(`Autoplay blocked or play failed for ${key}`,err);
         });
     });
 }
