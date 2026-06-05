@@ -33,7 +33,7 @@ export default function App() {
         </section>
 
         {/* [섹션 2] 중앙: 3D 위젯 및 타이머 영역 */}
-        <section className="lg:col-span-2 bg-white/40 backdrop-blur-md rounded-2xl p-4 shadow-sm border border-gray-100/80 flex flex-col items-center justify-center relative hover:shadow-md transition-all duration-300 overflow-hidden">
+        <section className="lg:col-span-2 flex flex-col min-h-0 overflow-hidden">
           <FocusTimer />
         </section>
 
