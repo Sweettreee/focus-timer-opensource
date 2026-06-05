@@ -25,7 +25,7 @@ export default function App() {
       <Header currentView="focus" />
 
       {/* 메인 3분할 콘텐츠 영역 */}
-      <main className="grid grid-cols-1 lg:grid-cols-4 gap-3 flex-1 min-h-0 items-stretch mb-1">
+      <main className="grid grid-cols-1 lg:grid-cols-5 gap-2 flex-1 min-h-0 items-stretch mb-1">
 
         {/* [섹션 1] 좌측: 사운드 믹서 영역 */}
         <section className="lg:col-span-1 bg-white/60 backdrop-blur-md rounded-2xl p-4 shadow-sm border border-gray-100/80 flex flex-col hover:shadow-md transition-all duration-300 overflow-hidden">
@@ -33,12 +33,12 @@ export default function App() {
         </section>
 
         {/* [섹션 2] 중앙: 3D 위젯 및 타이머 영역 */}
-        <section className="lg:col-span-2 flex flex-col min-h-0 overflow-hidden">
+        <section className="lg:col-span-3 flex flex-col min-h-0 overflow-hidden">
           <FocusTimer />
         </section>
 
         {/* [섹션 3] 우측: 오늘의 할 일 및 기록 캡처 영역 */}
-        <section className="lg:col-span-1 flex flex-col gap-4 min-h-0 overflow-hidden">
+        <section className="lg:col-span-1 flex flex-col gap-2 min-h-0 overflow-hidden">
           <TodoList />
           <SessionCards />
         </section>
