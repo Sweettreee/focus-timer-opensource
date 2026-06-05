@@ -1,9 +1,9 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import * as authService from "./auth_service";
-import { asyncHandler } from "../../shared/asyncHandler";
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const authService = "./auth_service";
+const { asyncHandler } = "../../shared/asyncHandler";
 
-export const register = asyncHandler(async (req, res) => {
+exports.register = asyncHandler(async (req, res) => {
   const { email, password, nickname } = req.body || {};
 
   if (!email || !password || !nickname) {
@@ -15,14 +15,14 @@ export const register = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "이미 가입된 이메일입니다." });
   }
 
-  const salt = await bcrypt.getSalt(10);
+  const salt = await bcrypt.genSalt(10);
   const passwordHash = await bcrypt.hash(password, salt);
   await authService.createUser({ email, nickname, passwordHash });
 
   res.status(201).json({ message: "회원가입이 성공적으로 완료되었습니다." });
 });
 
-export const login = asyncHandler(async (req, res) => {
+exports.login = asyncHandler(async (req, res) => {
   const { email, password } = req.body || {};
 
   if (!email || !password) {
@@ -38,7 +38,7 @@ export const login = asyncHandler(async (req, res) => {
       .json({ message: "가입되지 않은 이메일이거나 비밀번호가 다릅니다" });
   }
 
-  const user = user[0];
+  const user = users[0];
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
     return res
@@ -54,6 +54,17 @@ export const login = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     token,
+    user: { id: user.id, email: user.email, nickname: user.nickname },
+  });
+});
+
+exports.me = asyncHandler(async (req, res) => {
+  // authMiddleware가 req.user(= { id, email })를 주입. DB에서 최신 프로필 조회.
+  const user = await authService.findById(req.user.id);
+  if (!user) {
+    return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
+  }
+  res.statue(200).json({
     user: { id: user.id, email: user.email, nickname: user.nickname },
   });
 });
