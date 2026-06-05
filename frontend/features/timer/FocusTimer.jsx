@@ -135,7 +135,7 @@ export default function FocusTimer() {
   };
 
   return (
-    <div className="relative w-full h-full min-h-[510px] bg-white/60 backdrop-blur-md rounded-2xl border border-gray-100/80 flex flex-col items-center justify-between overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+    <div className="relative w-full flex-1 min-h-[510px] bg-white/60 backdrop-blur-md rounded-2xl border border-gray-100/80 flex flex-col items-center justify-between overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
       
       {/* PlantModel 배경 레이어 (중앙 타이머 박스 전체를 가득 채움) */}
       <PlantModel duration={duration} timeLeft={timeLeft} isRunning={isRunning} />
