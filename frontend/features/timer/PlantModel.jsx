@@ -90,7 +90,7 @@ export default function PlantModel({ duration, timeLeft, isRunning }) {
         muted
         playsInline
         preload="auto"
-        className="w-full h-full object-cover object-bottom select-none pointer-events-none transition-all duration-700"
+        className="w-full h-full object-contain object-center select-none pointer-events-none transition-all duration-700"
       />
       
       {/* 2. 식물을 아름답게 감싸는 미니멀 원형 진행바 (SVG, viewBox 400x400 고정계) */}
