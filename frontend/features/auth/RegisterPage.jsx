@@ -43,15 +43,15 @@ export default function RegisterPage() {
     }
 
     setError("");
-
-    // controller 로직이 완료되고 나서 추가
-    // await는 "비동기 작업이 끝날 때까지 기다려"라는 명령어
-    // try {
-    //     await register({email, password, nickname: name.trim()});
-    // } catch (err) {
-    //     setError(err.message || "회원가입 중 오류가 발생했습니다");
-    // }
   };
+
+  // controller 로직이 완료되고 나서 추가
+  // await는 "비동기 작업이 끝날 때까지 기다려"라는 명령어
+  // try {
+  //     await register({email, password, nickname: name.trim()});
+  // } catch (err) {
+  //     setError(err.message || "회원가입 중 오류가 발생했습니다");
+  // }
 
   return (
     <div className="min-h-screen bg-[#F9F6F0] text-[#333333] selection:bg-[#6B8E23]/20 flex flex-col font-sans">
@@ -168,21 +168,7 @@ export default function RegisterPage() {
               <div className="h-[1px] flex-grow border-gray-200"></div>
             </div>
 
-            {/* 소셜 가입 */}
-            {/* <div className="flex flex-col gap-3">
-                <button
-                  onClick={() => alert("카카오톡 로그인 성공!")}
-                  className="py-3 px-4 w-full bg-[#FEE500] hover:bg-[#F2D700] active:scale-[0.99] text-[#181600] text-[11px] font-bold rounded-xl transition duration-200 shadow-sm flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/KakaoTalk_logo.svg/1280px-KakaoTalk_logo.svg.png?_=20190617212005"
-                    alt="kakaotalk"
-                    className="w-3.5 h-3.5 fill-[#181600]"
-                    viewBox="0 0 24 24"
-                  />
-                  카카오톡으로 시작하기
-                </button>
-              </div> */}
+            {/* 소셜 가입 추후 추가*/}
           </div>
           {/* 로그인 전환 */}
           <div className="text-center pt-8 border-t border-dashed border-gray-100 mt-8">

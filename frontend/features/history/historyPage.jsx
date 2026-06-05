@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Sprout,
-  BookOpen,
-  Bot,
-  X,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Sprout, X } from "lucide-react";
 import { sessionTimestamp } from "./session";
 import { formatMinutes, computeStreak } from "./stats";
 // import { useSessions, useUser } from '../../app/selectors';
@@ -19,15 +12,13 @@ const WEEKDAYS = ["s", "m", "t", "w", "t", "f", "s"];
 // 저장되는 세션의 아이콘인데, 하나로 통일시킬지, 선택으로 둘지, (현재는 랜덤 부여) -> 회의 떄 의논해봐야함
 const CATEGORIES = [
   { icon: Sprout, bg: "bg-[#6B8E23]/20", fg: "text-[#4A5D4E]" },
-  { icon: BookOpen, bg: "bg-[#D8C9A8]/50", fg: "text-[#7A6A4A]" },
-  { icon: Bot, bg: "bg-sky-200/50", fg: "text-sky-700" },
 ];
 
 // 정본 세션을 화면 표시용으로 가공: timestamp/minutes 파생 + 카테고리(아이콘) 합성
-function decorateSession(s, index) {
+function decorateSession(s) {
   const timestamp = sessionTimestamp(s);
   const minutes = s.duration;
-  const category = CATEGORIES[index % CATEGORIES.length];
+  const category = CATEGORIES[CATEGORIES];
 
   return {
     ...s,
@@ -96,7 +87,7 @@ export default function HistoryPage() {
   if (!user) return null; // null을 반환하면 아무것도 DOM에 그리지 않음
 
   // 실제 히스토리에 보여줄 공부 세션들
-  const decorated = realSessions.map((s, i) => decorateSession(s, i));
+  const decorated = realSessions.map((s, i) => decorateSession(s));
 
   // 날짜별 합계(히트맵용)
   const minutesByDay = {};
