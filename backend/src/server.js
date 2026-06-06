@@ -16,15 +16,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // API 라우트
-app.use('/api/auth', authRoutes);
-app.use('/api/history', historyRoutes);
-app.use('/api/tasks', tasksRoutes);
+app.use('/api/auth', authRoutes);//로그인 회원가입
+app.use('/api/history', historyRoutes);//공부 기록(히스토리)
+app.use('/api/tasks', tasksRoutes);//할 일 목록
 
-//여기부터 랜딩페이지 코드입니다
+//여기부터 랜딩페이지 코드
 app.get('/api/stats', async (req, res) => {
   try {
+    //1.DB에서 전체 공부시간(duration)과 총 심은 나무(행 개수) 계산해서 가져옴
     const [hoursResult] = await query('SELECT COALESCE(SUM(duration), 0) as totalHours FROM history');
     const [treesResult] = await query('SELECT COUNT(*) as totalTrees FROM history');
+    //가장 열공한 상위4명의 유저를 가져온다
     const [rankers] = await query(`
       SELECT users.nickname, 
              COALESCE(SUM(history.duration), 0) as hours, 
@@ -52,13 +54,14 @@ app.get('/api/stats', async (req, res) => {
           hours: Math.round(Number(r.hours) / 60) || 1,
           trees: Number(r.trees)
         }))
+        //db에 데이터 없을 때를 대비한 더미 데이터
       : [
-          { id: 1, nickname: "ik", hours: 142, trees: 210 },
-          { id: 2, nickname: "hihi", hours: 128, trees: 185 },
-          { id: 3, nickname: "samsung", hours: 115, trees: 160 },
-          { id: 4, nickname: "yee~", hours: 98, trees: 142 },
+          { id: 1, nickname: "wook", hours: 142, trees: 210 },
+          { id: 2, nickname: "ik", hours: 128, trees: 185 },
+          { id: 3, nickname: "sik", hours: 115, trees: 160 },
+          { id: 4, nickname: "good", hours: 98, trees: 142 },
         ];
-
+    //최종 가공된 데이터를 프론트엔드에게 전달
     res.status(200).json({
       totalHours: responseHours,
       totalTrees: responseTrees,
@@ -70,33 +73,14 @@ app.get('/api/stats', async (req, res) => {
   }
 });
 
-app.post('/api/waitlist', async (req, res) => {
-  const { email } = req.body;
-  
-  if (!email) {
-    return res.status(400).json({ message: '이메일을 입력해주세요.' });
-  }
-
-  try {
-    await query('INSERT INTO waitlist (email) VALUES (?) ON DUPLICATE KEY UPDATE email=email', [email]);
-    console.log(`[DB Insert 성공] 새로운 사전예약 이메일: ${email}`);
-    
-    res.status(201).json({ 
-      success: true, 
-      message: '초대장 신청이 완료되었습니다.' 
-    });
-  } catch (error) {
-    res.status(500).json({ message: '이메일 저장 중 오류가 발생했습니다.' });
-  }
-});
 
 //랜딩페이지 코드 끝
 
-// 헬스체크
+// 헬스체크(서버가 살아있는지 테스트)
 app.get('/', (req, res) => {
   res.status(200).json({
     status: 'success',
-    message: 'Focus Room REST API Server is running beautifully. 🌿',
+    message: 'Focus Room REST API Server is running beautifully.',
     timestamp: new Date(),
   });
 });
@@ -112,12 +96,12 @@ initSchema()
   .then(() => {
     app.listen(PORT, () => {
       console.log('========================================');
-      console.log('🌿 Focus Room Backend Server is active!');
-      console.log(`🚀 Port: http://localhost:${PORT}`);
+      console.log(' Focus Room Backend Server is active!');
+      console.log(` Port: http://localhost:${PORT}`);
       console.log('========================================');
     });
   })
   .catch((err) => {
-    console.error('❌ 데이터베이스 초기화 실패:', err);
+    console.error(' 데이터베이스 초기화 실패:', err);
     process.exit(1);
   });
