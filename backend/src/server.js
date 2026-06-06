@@ -1,11 +1,11 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
 
-const { initSchema, query } = require('./shared/db');
-const authRoutes = require('./features/auth/auth.routes');
-const historyRoutes = require('./features/history/history.routes');
-const tasksRoutes = require('./features/tasks/tasks.routes');
+const { initSchema, query } = require("./shared/db");
+const authRoutes = require("./features/auth/auth.routes");
+const historyRoutes = require("./features/history/history.routes");
+const tasksRoutes = require("./features/tasks/tasks.routes");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -16,16 +16,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // API 라우트
-app.use('/api/auth', authRoutes);//로그인 회원가입
-app.use('/api/history', historyRoutes);//공부 기록(히스토리)
-app.use('/api/tasks', tasksRoutes);//할 일 목록
+app.use("/api/auth", authRoutes); //로그인 회원가입
+app.use("/api/history", historyRoutes); //공부 기록(히스토리)
+app.use("/api/tasks", tasksRoutes); //할 일 목록
 
 //여기부터 랜딩페이지 코드
-app.get('/api/stats', async (req, res) => {
+app.get("/api/stats", async (req, res) => {
   try {
     //1.DB에서 전체 공부시간(duration)과 총 심은 나무(행 개수) 계산해서 가져옴
-    const [hoursResult] = await query('SELECT COALESCE(SUM(duration), 0) as totalHours FROM history');
-    const [treesResult] = await query('SELECT COUNT(*) as totalTrees FROM history');
+    const [hoursResult] = await query(
+      "SELECT COALESCE(SUM(duration), 0) as totalHours FROM history",
+    );
+    const [treesResult] = await query(
+      "SELECT COUNT(*) as totalTrees FROM history",
+    );
     //가장 열공한 상위4명의 유저를 가져온다
     const [rankers] = await query(`
       SELECT users.nickname, 
@@ -47,61 +51,65 @@ app.get('/api/stats', async (req, res) => {
     const responseHours = dbHours > 0 ? dbHours : baseHours;
     const responseTrees = dbTrees > 0 ? dbTrees : baseTrees;
 
-    const activeRankers = rankers && rankers.some(r => r.trees > 0)
-      ? rankers.map((r, i) => ({
-          id: i + 1,
-          nickname: r.nickname,
-          hours: Math.round(Number(r.hours) / 60) || 1,
-          trees: Number(r.trees)
-        }))
-        //db에 데이터 없을 때를 대비한 더미 데이터
-      : [
-          { id: 1, nickname: "wook", hours: 142, trees: 210 },
-          { id: 2, nickname: "ik", hours: 128, trees: 185 },
-          { id: 3, nickname: "sik", hours: 115, trees: 160 },
-          { id: 4, nickname: "good", hours: 98, trees: 142 },
-        ];
+    const activeRankers =
+      rankers && rankers.some((r) => r.trees > 0)
+        ? rankers.map((r, i) => ({
+            id: i + 1,
+            nickname: r.nickname,
+            hours: Math.round(Number(r.hours) / 60) || 1,
+            trees: Number(r.trees),
+          }))
+        : //db에 데이터 없을 때를 대비한 더미 데이터
+          [
+            { id: 1, nickname: "wook", hours: 142, trees: 210 },
+            { id: 2, nickname: "ik", hours: 128, trees: 185 },
+            { id: 3, nickname: "sik", hours: 115, trees: 160 },
+            { id: 4, nickname: "good", hours: 98, trees: 142 },
+          ];
     //최종 가공된 데이터를 프론트엔드에게 전달
     res.status(200).json({
       totalHours: responseHours,
       totalTrees: responseTrees,
-      topRankers: activeRankers
+      topRankers: activeRankers,
     });
   } catch (error) {
-    console.error('Stats API error:', error);
-    res.status(500).json({ message: '통계 데이터를 불러오는 중 오류가 발생했습니다.' });
+    console.error("Stats API error:", error);
+    res
+      .status(500)
+      .json({ message: "통계 데이터를 불러오는 중 오류가 발생했습니다." });
   }
 });
-
 
 //랜딩페이지 코드 끝
 
 // 헬스체크(서버가 살아있는지 테스트)
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.status(200).json({
-    status: 'success',
-    message: 'Focus Room REST API Server is running beautifully.',
+    status: "success",
+    message: "Focus Room REST API Server is running beautifully.",
     timestamp: new Date(),
   });
 });
 
 // 글로벌 에러 핸들러
 app.use((err, req, res, next) => {
-  console.error('서버 에러 감지:', err);
-  res.status(500).json({ message: '서버 내부에서 알 수 없는 오류가 발생했습니다.' });
+  console.error("서버 에러 감지:", err);
+  res
+    .status(500)
+    .json({ message: "서버 내부에서 알 수 없는 오류가 발생했습니다." });
 });
 
 // 스키마 초기화 완료 후 서버 시작 (테이블 준비 전 요청 수신 방지)
 initSchema()
   .then(() => {
     app.listen(PORT, () => {
-      console.log('========================================');
-      console.log(' Focus Room Backend Server is active!');
+      console.log("========================================");
+      console.log(" Focus Room Backend Server is active!");
       console.log(` Port: http://localhost:${PORT}`);
-      console.log('========================================');
+      console.log("========================================");
     });
   })
   .catch((err) => {
-    console.error(' 데이터베이스 초기화 실패:', err);
+    console.error(" 데이터베이스 초기화 실패:", err);
     process.exit(1);
   });

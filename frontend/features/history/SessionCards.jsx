@@ -1,6 +1,5 @@
-import React from 'react';
-import { Award, Clock, NotebookPen } from 'lucide-react';
-import { useSessions } from '../../app/selectors';
+import { Award, Clock, NotebookPen } from "lucide-react";
+import { useSessions } from "../../app/selectors";
 
 export default function SessionCards() {
   const sessions = useSessions();
@@ -11,10 +10,10 @@ export default function SessionCards() {
   const formatDate = (iso) => {
     const d = new Date(iso);
     return d.toLocaleString([], {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -24,14 +23,18 @@ export default function SessionCards() {
         <h2 className="text-xs font-bold text-[#4A5D4E]/80 uppercase tracking-widest flex items-center gap-1">
           <NotebookPen className="w-3.5 h-3.5 text-[#6B8E23]" /> Session Cards
         </h2>
-        <p className="text-[10px] text-gray-400">your focus sessions, newest first</p>
+        <p className="text-[10px] text-gray-400">
+          your focus sessions, newest first
+        </p>
       </div>
 
       {orderedSessions.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center text-center text-gray-400 gap-1 py-4">
           <Award className="w-5 h-5 text-gray-300 animate-soft-pulse" />
           <span className="text-[10px]">아직 기록된 세션이 없습니다.</span>
-          <span className="text-[9px] text-gray-400">타이머를 완료하면 카드가 쌓입니다!</span>
+          <span className="text-[9px] text-gray-400">
+            타이머를 완료하면 카드가 쌓입니다!
+          </span>
         </div>
       ) : (
         <div className="space-y-2 overflow-y-auto flex-1 min-h-0 pr-1">
@@ -44,10 +47,14 @@ export default function SessionCards() {
                 <span className="flex items-center gap-1 text-[10px] font-bold font-mono text-[#6B8E23] bg-[#6B8E23]/10 px-2 py-0.5 rounded-md">
                   <Clock className="w-3 h-3" /> {s.duration}min
                 </span>
-                <span className="text-[9px] text-gray-400 font-mono">{formatDate(s.session_date)}</span>
+                <span className="text-[9px] text-gray-400 font-mono">
+                  {formatDate(s.session_date)}
+                </span>
               </div>
               {s.memo ? (
-                <p className="text-[11px] text-gray-600 leading-relaxed break-words">{s.memo}</p>
+                <p className="text-[11px] text-gray-600 leading-relaxed break-words">
+                  {s.memo}
+                </p>
               ) : (
                 <p className="text-[10px] text-gray-300 italic">메모 없음</p>
               )}
