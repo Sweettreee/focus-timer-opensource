@@ -29,7 +29,7 @@ export async function apiFetch(
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error(data.message || data.error || "요청에 실패했습ㄴ디ㅏ");
+    throw new Error(data.message || data.error || "요청에 실패했습니다");
   }
   return data;
 }
