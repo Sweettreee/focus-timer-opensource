@@ -3,9 +3,9 @@ const cors = require("cors");
 require("dotenv").config();
 
 const { initSchema } = require("./shared/db");
-const authRoutes = require("./features/auth/auth.routes");
-const historyRoutes = require("./features/history/history.routes");
-const tasksRoutes = require("./features/tasks/tasks.routes");
+const authRoutes = require("./features/auth/auth_routes");
+const historyRoutes = require("./features/history/history_routes");
+const tasksRoutes = require("./features/tasks/tasks_routes");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -40,7 +40,12 @@ app.use((err, req, res, next) => {
 // 스키마 초기화 완료 후 서버 시작 (테이블 준비 전 요청 수신 방지)
 initSchema()
   .then(() => {
-    app.listen(PORT, () => {});
+    app.listen(PORT, () => {
+      console.log("========================================");
+      console.log("🌿 Focus Room Backend Server is active!");
+      console.log(`🚀 Port: http://localhost:${PORT}`);
+      console.log("========================================");
+    });
   })
   .catch((err) => {
     console.error("❌ 데이터베이스 초기화 실패:", err);

@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const authService = "./auth_service";
-const { asyncHandler } = "../../shared/asyncHandler";
+const authService = require("./auth_service");
+const { asyncHandler } = require("../../shared/asyncHandler");
 
 exports.register = asyncHandler(async (req, res) => {
   const { email, password, nickname } = req.body || {};
@@ -64,7 +64,7 @@ exports.me = asyncHandler(async (req, res) => {
   if (!user) {
     return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
   }
-  res.statue(200).json({
+  res.status(200).json({
     user: { id: user.id, email: user.email, nickname: user.nickname },
   });
 });

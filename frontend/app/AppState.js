@@ -7,6 +7,7 @@ export const initialState = {
   // 추후에 landing page로 변경 예정
 };
 
+// 초기 상태 이후에는 reducer에서 반환한 값이 state가 된다.
 export function reducer(state, action) {
   switch (action.type) {
     case "HYDATE":
