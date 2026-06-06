@@ -112,12 +112,12 @@ initSchema()
   .then(() => {
     app.listen(PORT, () => {
       console.log('========================================');
-      console.log('🌿 Focus Room Backend Server is active!');
-      console.log(`🚀 Port: http://localhost:${PORT}`);
+      console.log(' Focus Room Backend Server is active!');
+      console.log(` Port: http://localhost:${PORT}`);
       console.log('========================================');
     });
   })
   .catch((err) => {
-    console.error('❌ 데이터베이스 초기화 실패:', err);
+    console.error(' 데이터베이스 초기화 실패:', err);
     process.exit(1);
   });

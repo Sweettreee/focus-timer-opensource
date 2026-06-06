@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { BrainCircuit, Sprout, Headphones, ChevronRight, Users, Trophy, Medal, Crown } from 'lucide-react';
 import Header from '../../app/layout/Header';
 import { useNavController } from '../../app/useNavController';
+import { useUser } from '../selectors'; // Header와 동일한 셀렉터 참조
 
 export default function LandingPage() {
   const { goTo } = useNavController();
+  const user = useUser(); // 로그인 여부 확인
   const [isVisible, setIsVisible] = useState(false);
 
   // 서버 연결 전이나 에러 시 보여줄 초기 디폴트 데이터
@@ -26,7 +28,8 @@ export default function LandingPage() {
         return res.json();
       })
       .then(data => {
-        if (data.totalHours && data.totalTrees) {
+        // 데이터가 0일 때도 정상 반영되도록 함
+        if (data.totalHours !== undefined && data.totalTrees !== undefined) {
           setGlobalStats({
             totalHours: data.totalHours,
             totalTrees: data.totalTrees
@@ -37,22 +40,30 @@ export default function LandingPage() {
         }
       })
       .catch(err => {
-        // 서버 오프라인 시 콘솔에만 찍고 기본 디폴트 데이터 유지
         console.warn('실시간 통계 데이터 로드 실패 (로컬 데이터 대체):', err);
       });
   }, []);
 
+  // 로그인 여부에 따른 동적 버튼 액션
+  const handleMainAction = () => {
+    if (user) {
+      goTo('focus');
+    } else {
+      goTo('login');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F9F6F0] text-[#333333] flex flex-col font-sans">
       
-      {/* 글로벌 네비게이션 */}
-      <div className="px-6 pt-5">
+      //네비게이션
+      <div className="px-6 pt-5 max-w-7xl mx-auto w-full">
         <Header currentView="landing" />
       </div>
 
       <main className="flex-1">
         
-        {/* 메인 히어로 영역 */}
+        //메인 영역
         <section className={`flex flex-col items-center justify-center text-center px-6 py-20 transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}>
           <div className="w-16 h-16 rounded-full bg-[#6B8E23]/10 flex items-center justify-center text-[#6B8E23] mb-6">
             <Sprout className="w-8 h-8" />
@@ -68,14 +79,14 @@ export default function LandingPage() {
           </p>
 
           <button 
-            onClick={() => goTo('focus')}
+            onClick={handleMainAction}
             className="flex items-center gap-1.5 px-6 py-3.5 bg-[#4A5D4E] hover:bg-[#3d4d41] text-white text-sm font-bold rounded-full shadow transition-all hover:-translate-y-0.5"
           >
-            Start Focusing <ChevronRight className="w-4 h-4" />
+            {user ? 'Start Focusing' : 'Get Started Free'} <ChevronRight className="w-4 h-4" />
           </button>
         </section>
 
-        {/* 3대 주요 기능 슬롯 */}
+        //3대 주요 기능 슬롯
         <section className="bg-white/50 border-y border-gray-200 py-16 px-6">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
             
@@ -85,7 +96,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-base font-bold text-[#4A5D4E] mb-2">AI Vision Assistant</h3>
               <p className="text-xs text-gray-500 leading-relaxed">
-                AI 기술로 자리비움을 감지합니다. 자리를 비우면 타이머가 일시정지되고, 돌아오면 몰입을 이어갈 수 있습니다.
+                온디바이스 AI 기술로 캠 앞의 자리를 감지합니다. 자리를 비우면 타이머가 일시정지되고, 돌아오면 몰입을 이어갈 수 있습니다.
               </p>
             </div>
 
@@ -112,11 +123,11 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* 대시보드 및 실시간 랭킹 보드 */}
+        //대시보드 및 실시간 랭킹 보드
         <section className="py-16 px-6 max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             
-            {/* 좌측 글로벌 지표 */}
+            //좌측 글로벌 지표
             <div className="flex flex-col justify-center">
               <div className="flex items-center gap-1.5 mb-2 text-[#6B8E23]">
                 <Users className="w-4 h-4" />
@@ -146,7 +157,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* 우측 실시간 탑랭커 보드 */}
+            //우측 실시간 탑랭커 보드 
             <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
               <div className="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
                 <div>
@@ -189,7 +200,7 @@ export default function LandingPage() {
       </main>
 
       <footer className="text-center py-6 border-t border-gray-200 text-[10px] text-gray-400">
-        © 2026 FOCUS ROOM.Designed by Team Search(LeeDongWook JangIkJoon KimJinSik).
+        2026 FOCUS ROOM. Designed by Team Search (LeeDongWook JangIkJoon KimJinSik).
       </footer>
     </div>
   );
