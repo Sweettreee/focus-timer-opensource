@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Video, VideoOff } from "lucide-react";
 //구글이 만든 인공지능 엔진 MediaPipe 웹캠 영상 속에서 사람의 눈코입을 찾아 얼굴이 있다 없다를 판별
-import { FaceDetector, FilesetResolver } from "@mediapip/tasks-vision";
+import { FaceDetector, FilesetResolver } from "@MediaPipe/tasks-vision";
 export default function FaceCamera({
   aiEnabled,
   isAiPaused,
