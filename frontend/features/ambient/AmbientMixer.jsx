@@ -193,7 +193,7 @@ export default function AmbientMixer(){
           {/* 하단 감성적인 명언 */}
           <div className="mt-8 pt-4 border-t border-gray-100/80">
             <p className="text-xs italic text-gray-400 font-serif leading-relaxed text-center">
-              "The quiet you cultivate now becomes the life you build."
+              "할 수 있다! 하면 된다!FocusRoom 화이팅"
             </p>
           </div>
         </div>
