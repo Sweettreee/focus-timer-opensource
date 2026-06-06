@@ -47,17 +47,17 @@ app.get('/api/stats', async (req, res) => {
 
     const activeRankers = rankers && rankers.some(r => r.trees > 0)
       ? rankers.map((r, i) => ({
-          id: i + 1,
-          nickname: r.nickname,
-          hours: Math.round(Number(r.hours) / 60) || 1,
-          trees: Number(r.trees)
-        }))
+        id: i + 1,
+        nickname: r.nickname,
+        hours: Math.round(Number(r.hours) / 60) || 1,
+        trees: Number(r.trees)
+      }))
       : [
-          { id: 1, nickname: "ik", hours: 142, trees: 210 },
-          { id: 2, nickname: "hihi", hours: 128, trees: 185 },
-          { id: 3, nickname: "samsung", hours: 115, trees: 160 },
-          { id: 4, nickname: "yee~", hours: 98, trees: 142 },
-        ];
+        { id: 1, nickname: "ik", hours: 142, trees: 210 },
+        { id: 2, nickname: "hihi", hours: 128, trees: 185 },
+        { id: 3, nickname: "samsung", hours: 115, trees: 160 },
+        { id: 4, nickname: "yee~", hours: 98, trees: 142 },
+      ];
 
     res.status(200).json({
       totalHours: responseHours,
@@ -70,33 +70,13 @@ app.get('/api/stats', async (req, res) => {
   }
 });
 
-app.post('/api/waitlist', async (req, res) => {
-  const { email } = req.body;
-  
-  if (!email) {
-    return res.status(400).json({ message: '이메일을 입력해주세요.' });
-  }
-
-  try {
-    await query('INSERT INTO waitlist (email) VALUES (?) ON DUPLICATE KEY UPDATE email=email', [email]);
-    console.log(`[DB Insert 성공] 새로운 사전예약 이메일: ${email}`);
-    
-    res.status(201).json({ 
-      success: true, 
-      message: '초대장 신청이 완료되었습니다.' 
-    });
-  } catch (error) {
-    res.status(500).json({ message: '이메일 저장 중 오류가 발생했습니다.' });
-  }
-});
-
 //랜딩페이지 코드 끝
 
 // 헬스체크
 app.get('/', (req, res) => {
   res.status(200).json({
     status: 'success',
-    message: 'Focus Room REST API Server is running beautifully. 🌿',
+    message: 'Focus Room REST API Server is running beautifully.',
     timestamp: new Date(),
   });
 });
@@ -112,12 +92,12 @@ initSchema()
   .then(() => {
     app.listen(PORT, () => {
       console.log('========================================');
-      console.log('🌿 Focus Room Backend Server is active!');
-      console.log(`🚀 Port: http://localhost:${PORT}`);
+      console.log(' Focus Room Backend Server is active!');
+      console.log(`Port: http://localhost:${PORT}`);
       console.log('========================================');
     });
   })
   .catch((err) => {
-    console.error('❌ 데이터베이스 초기화 실패:', err);
+    console.error('데이터베이스 초기화 실패:', err);
     process.exit(1);
   });
