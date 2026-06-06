@@ -56,10 +56,10 @@ app.get('/api/stats', async (req, res) => {
         }))
         //db에 데이터 없을 때를 대비한 더미 데이터
       : [
-          { id: 1, nickname: "ik", hours: 142, trees: 210 },
-          { id: 2, nickname: "hihi", hours: 128, trees: 185 },
-          { id: 3, nickname: "samsung", hours: 115, trees: 160 },
-          { id: 4, nickname: "yee~", hours: 98, trees: 142 },
+          { id: 1, nickname: "wook", hours: 142, trees: 210 },
+          { id: 2, nickname: "ik", hours: 128, trees: 185 },
+          { id: 3, nickname: "sik", hours: 115, trees: 160 },
+          { id: 4, nickname: "good", hours: 98, trees: 142 },
         ];
     //최종 가공된 데이터를 프론트엔드에게 전달
     res.status(200).json({
