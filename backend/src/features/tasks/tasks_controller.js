@@ -1,5 +1,5 @@
 // tasks feature 요청 처리. 모든 변경 후 사용자의 최신 목록을 반환한다.
-const tasksService = require("./tasks.service");
+const tasksService = require("./tasks_service");
 const { asyncHandler } = require("../../shared/asyncHandler");
 
 async function respondList(res, userId, status = 200) {

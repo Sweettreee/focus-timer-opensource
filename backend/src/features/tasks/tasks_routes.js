@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const tasksController = require("./tasks.controller");
+const tasksController = require("./tasks_controller");
 const authMiddleware = require("../../shared/authMiddleware");
 
 // 모두 JWT 보호

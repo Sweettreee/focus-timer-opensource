@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const historyController = require("./history.controller");
+const historyController = require("./history_controller");
 const authMiddleware = require("../../shared/authMiddleware");
 
 // 모두 JWT 보호 — 세션 기록은 로그인 전용

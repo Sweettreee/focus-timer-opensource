@@ -1,6 +1,6 @@
 // history feature 요청 처리. SQL은 history.service에 위임.
 // 모든 변경 후 사용자의 최신 목록을 반환한다(프론트의 "list 반환 → SET_SESSIONS" 계약과 일치).
-const historyService = require("./history.service");
+const historyService = require("./history_service");
 const { asyncHandler } = require("../../shared/asyncHandler");
 
 async function respondList(res, userId, status = 200) {

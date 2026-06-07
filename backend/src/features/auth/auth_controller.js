@@ -1,7 +1,7 @@
 // auth feature 요청 처리: 검증 + 해싱/토큰 발급. SQL은 auth.service에 위임.
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const authService = require("./auth.service");
+const authService = require("./auth_service");
 const { asyncHandler } = require("../../shared/asyncHandler");
 
 exports.register = asyncHandler(async (req, res) => {
