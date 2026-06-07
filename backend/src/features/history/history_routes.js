@@ -4,10 +4,13 @@ const router = express.Router();
 const historyController = require("./history_controller");
 const authMiddleware = require("../../shared/authMiddleware");
 
-// POST 요청 처리
-router.post("/sync", authMiddleware, historyController.syncHistory);
+// GET /api/history — 로그인 사용자의 세션 목록 조회
+router.get("/", authMiddleware, historyController.listHistory);
 
-// DELETE 요청 처리
+// POST /api/history — 세션 1건 저장 후 최신 목록 반환
+router.post("/", authMiddleware, historyController.createHistory);
+
+// DELETE /api/history/:id — 세션 삭제 후 최신 목록 반환
 router.delete("/:id", authMiddleware, historyController.deleteHistory);
 
 module.exports = router;
