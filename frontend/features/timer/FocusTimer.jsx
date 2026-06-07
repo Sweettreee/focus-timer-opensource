@@ -26,11 +26,9 @@ export default function FocusTimer() {
   const totalMinutes = Math.floor(totalTime / 60);
   const isModalOpen = showModal || showMemoOverlay;
 
-  // 메인 동작 코드 (React 표준 타이머 패턴 적용)
+  // 메인 동작 코드
   useEffect(() => {
     if (!isRunning) return;
-
-    // 시간이 다 되면 안전하게 타이머 종료 처리 호출
     if (timeLeft === 0) {
       handleTimerEnd();
       return;
@@ -43,7 +41,7 @@ export default function FocusTimer() {
     return () => clearInterval(timerId);
   }, [isRunning, timeLeft]);
 
-  //끝났을때 (기존 finishTimer와 stopAndLog 통합)
+  //끝났을때
   const handleTimerEnd = () => {
     setIsRunning(false);
     setShowMemoOverlay(true);
@@ -83,7 +81,7 @@ export default function FocusTimer() {
     setTimeLeft(newSeconds);
   };
 
-  // 포털 엘리먼트 탐색 (안전한 1회성 + 소규모 폴백)
+  // 포털 엘리먼트 탐색
   useEffect(() => {
     const portalElement = document.getElementById('camera-portal-root');
     if (portalElement) {
@@ -91,7 +89,7 @@ export default function FocusTimer() {
       return;
     }
 
-    // 마운트 직후 아주 잠깐 엇갈렸을 때를 위한 1회성/소규모 폴백
+    // 마운트 직후 1회성으로 검사
     let count = 0;
     const interval = setInterval(() => {
       const retryEl = document.getElementById('camera-portal-root');
@@ -100,7 +98,7 @@ export default function FocusTimer() {
         setCamPortal(retryEl);
         clearInterval(interval);
       } else if (count > 5) {
-        clearInterval(interval); // 5번(0.5초) 시도 후 깔끔하게 포기
+        clearInterval(interval);
       }
     }, 100);
 
@@ -130,7 +128,7 @@ export default function FocusTimer() {
   return (
     <div className="relative w-full flex-1 min-h-[500px] bg-white/60 backdrop-blur-md rounded-2xl border border-gray-200/50 flex flex-col items-center justify-between overflow-hidden shadow-sm hover:shadow-md transition-all">
 
-      {/* PlantModel 배경 레이어 (중앙 타이머 박스 전체를 가득 채움) */}
+      {/* 식물 모델 배경 */}
       <PlantModel totalTime={totalTime} timeLeft={timeLeft} isRunning={isRunning} />
 
       {/* 자리비움 모달 */}
@@ -195,7 +193,7 @@ export default function FocusTimer() {
         </div>
       )}
 
-      {/* 1. 상단 오버레이: 타이머 디스플레이 */}
+      {/*상단 오버레이 */}
       <div className={`absolute top-6 left-1/2 -translate-x-1/2 z-20 text-center w-full flex flex-col items-center transition-all duration-300 ${isModalOpen ? 'blur-sm scale-95 opacity-80 pointer-events-none select-none' : ''}`}>
         <div className="text-[5.5rem] leading-none font-serif font-medium text-[#2D3748] tracking-tight drop-shadow-md tabular-nums select-none pointer-events-none">
           {formatTime(timeLeft)}
@@ -207,7 +205,7 @@ export default function FocusTimer() {
           {isRunning ? 'Focusing' : 'Paused'}
         </p>
 
-        {/* 시간 설정 컨트롤 (정지 상태일 때만 은은하게 노출) */}
+        {/* 시간 설정 컨트롤*/}
         <div className={`w-full max-w-[200px] mt-4 px-2 transition-all duration-300 ${isRunning ? 'opacity-0 pointer-events-none translate-y-1' : 'opacity-100 translate-y-0'}`}>
           <div className="flex flex-col gap-3">
             <div className="flex justify-between gap-1 border border-gray-200/50 bg-white/70 backdrop-blur-md p-1 rounded-xl shadow-sm">
@@ -226,7 +224,7 @@ export default function FocusTimer() {
         </div>
       </div>
 
-      {/* AI 카메라 피드 - React Portal을 통해 왼쪽 사운드 컬럼 하단의 빈 공간으로 렌더링 전송 */}
+      {/* AI 카메라 */}
       {camPortal && ReactDOM.createPortal(
         <div className={`w-full flex flex-col gap-4 z-20 transition-all duration-300 ${isModalOpen ? 'blur-sm scale-95 opacity-80 pointer-events-none select-none' : ''}`}>
           <div className="w-full h-40 shadow-md rounded-2xl overflow-hidden bg-[#1A1C23] border border-gray-800/40 relative">
@@ -256,7 +254,7 @@ export default function FocusTimer() {
         camPortal
       )}
 
-      {/* 2. 하단 오버레이: 메인 컨트롤 버튼들 */}
+      {/* 하단 오버레이 */}
       <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-end justify-center gap-12 w-full transition-all duration-300 ${isModalOpen ? 'blur-sm scale-95 opacity-80 pointer-events-none select-none' : ''}`}>
 
         {/* Reset 버튼 */}
