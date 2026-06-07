@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Plus, Check, Trash2, Calendar, Target } from 'lucide-react';
-import { useTasks } from '../../app/selectors';
-import { useTaskController } from './useTaskController';
+import { useState } from "react";
+import { Plus, Check, Trash2, Target } from "lucide-react";
+import { useTasks } from "../../app/selectors";
+import { useTaskController } from "./useTaskController";
 
 export default function TodoList() {
   const tasks = useTasks();
   const { addTask, toggleTask, deleteTask } = useTaskController();
 
-  const [newTaskText, setNewTaskText] = useState('');
+  const [newTaskText, setNewTaskText] = useState("");
   const [isAdding, setIsAdding] = useState(false);
 
   const handleToggle = (id) => toggleTask(id);
@@ -21,21 +21,27 @@ export default function TodoList() {
     e.preventDefault();
     if (!newTaskText.trim()) return;
     addTask(newTaskText);
-    setNewTaskText('');
+    setNewTaskText("");
     setIsAdding(false);
   };
 
   return (
-    <div className="bg-white/60 backdrop-blur-md rounded-2xl p-4 shadow-sm border border-gray-100 flex-1 flex flex-col min-h-0">
-      <div className="flex justify-between items-center mb-2">
+    <div className="bg-white/60 backdrop-blur-md rounded-2xl p-5 shadow-sm border border-gray-100 flex-1 flex flex-col min-h-[350px]">
+      <div className="flex justify-between items-center mb-4">
         <div>
-          <h2 className="text-xs font-bold text-[#4A5D4E]/80 uppercase tracking-widest">Today's Focus</h2>
-          <p className="text-[10px] text-gray-400">set your goals for this session</p>
+          <h2 className="text-xs font-bold text-[#4A5D4E]/80 uppercase tracking-widest">
+            Today's Focus
+          </h2>
+          <p className="text-[10px] text-gray-400">
+            set your goals for this session
+          </p>
         </div>
         <button
           onClick={() => setIsAdding(!isAdding)}
           className={`w-7 h-7 rounded-full flex items-center justify-center font-bold transition-all shadow-sm ${
-            isAdding ? 'bg-amber-100 text-amber-700 rotate-45' : 'bg-[#5A6E5D]/10 text-[#5A6E5D] hover:bg-[#5A6E5D]/20'
+            isAdding
+              ? "bg-amber-100 text-amber-700 rotate-45"
+              : "bg-[#5A6E5D]/10 text-[#5A6E5D] hover:bg-[#5A6E5D]/20"
           }`}
         >
           <Plus className="w-4 h-4" />
@@ -44,7 +50,10 @@ export default function TodoList() {
 
       {/* 태스크 추가 폼 (토글식) */}
       {isAdding && (
-        <form onSubmit={handleAddTask} className="mb-2 bg-white/80 p-3 rounded-xl border border-gray-100 space-y-2.5 animate-fadeIn">
+        <form
+          onSubmit={handleAddTask}
+          className="mb-4 bg-white/80 p-3 rounded-xl border border-gray-100 space-y-2.5 animate-fadeIn"
+        >
           <input
             type="text"
             placeholder="What are you focusing on?"
@@ -72,13 +81,13 @@ export default function TodoList() {
       )}
 
       {/* 할 일 리스트 */}
-      <div className="space-y-2 overflow-y-auto flex-1 min-h-0 pr-1">
+      <div className="space-y-2.5 overflow-y-auto flex-1 max-h-[300px] pr-1">
         {tasks.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center py-10 text-center text-gray-400 gap-2">
             <Target className="w-8 h-8 opacity-30 text-[#6B8E23]" />
             <p className="text-xs">No focus items added yet.</p>
-            <button 
-              onClick={() => setIsAdding(true)} 
+            <button
+              onClick={() => setIsAdding(true)}
               className="text-[10px] text-[#6B8E23] hover:underline font-semibold"
             >
               + Add your first task
@@ -95,13 +104,15 @@ export default function TodoList() {
                 <div
                   className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
                     task.checked
-                      ? 'bg-[#6B8E23] border-[#6B8E23] text-white'
-                      : 'border-gray-300 group-hover:border-[#6B8E23]'
+                      ? "bg-[#6B8E23] border-[#6B8E23] text-white"
+                      : "border-gray-300 group-hover:border-[#6B8E23]"
                   }`}
                 >
                   {task.checked && <Check className="w-3 h-3 stroke-[3]" />}
                 </div>
-                <span className={`font-medium truncate ${task.checked ? 'line-through text-gray-400' : 'text-gray-600'}`}>
+                <span
+                  className={`font-medium truncate ${task.checked ? "line-through text-gray-400" : "text-gray-600"}`}
+                >
                   {task.text}
                 </span>
               </div>
