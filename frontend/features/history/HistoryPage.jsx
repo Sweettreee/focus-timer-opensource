@@ -1,12 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Sprout,
-  BookOpen,
-  Bot,
-  X,
-} from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight, Sprout, X } from "lucide-react";
 import { sessionTimestamp } from "./session";
 import { formatMinutes, computeStreak } from "./stats";
 import { useSessions, useUser } from "../../app/selectors";
@@ -16,26 +9,17 @@ import Header from "../../app/layout/Header";
 
 const WEEKDAYS = ["s", "m", "t", "w", "t", "f", "s"];
 
-const CATEGORIES = [
-  { icon: Sprout, bg: "bg-[#6B8E23]/20", fg: "text-[#4A5D4E]" },
-  { icon: BookOpen, bg: "bg-[#D8C9A8]/50", fg: "text-[#7A6A4A]" },
-  { icon: Bot, bg: "bg-sky-200/50", fg: "text-sky-700" },
-];
-
-// 세션 id/타임스탬프 기반의 안정적 해시 (재렌더 시에도 동일한 값 유지)
-function hashSession(s) {
-  let h = Math.abs(Math.floor((Number(s.id) || 0) + (s.timestamp || 0)));
-  // 살짝 섞어서 분포를 고르게
-  h = (h ^ (h >> 5)) >>> 0;
-  return h;
-}
+const CATEGORIES = {
+  icon: Sprout,
+  bg: "bg-[#6B8E23]/20",
+  fg: "text-[#4A5D4E]",
+};
 
 // 정본 세션을 화면 표시용으로 가공: timestamp/minutes 파생 + 카테고리(아이콘) 합성.
 function decorateSession(s) {
   const timestamp = sessionTimestamp(s);
   const minutes = s.duration;
-  const h = hashSession({ id: s.id, timestamp });
-  const category = CATEGORIES[h % CATEGORIES.length];
+  const category = CATEGORIES;
 
   return {
     ...s,

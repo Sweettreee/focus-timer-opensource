@@ -7,7 +7,7 @@ async function listByUser(userId) {
     "SELECT id, text, checked FROM tasks WHERE user_id = ? ORDER BY created_at ASC",
     [userId],
   );
-  return rows;
+  return rows.map((row) => ({ ...row, checked: !!row.checked }));
 }
 
 async function create(userId, text) {
