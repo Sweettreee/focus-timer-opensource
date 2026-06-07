@@ -1,30 +1,22 @@
+const { randomUUID } = require('crypto');
 const db = require('../../shared/db');
 
-async function upsertMany(userId, sessions) {
-  for (const s of sessions) {
-
-    if (s == null || s.id == null) continue;
-
-    const raw = s.session_date ?? s.timestamp;
-    const date = raw ? new Date(raw) : new Date();
-    if (Number.isNaN(date.getTime())) continue;
-
-    const minutes = Math.trunc(Number(s.duration ?? s.minutes ?? 0)) || 0;
-    const memo = s.memo ?? s.label ?? null;
-
-    await db.query(
-      'INSERT IGNORE INTO history (id, user_id, duration, memo, session_date) VALUES (?, ?, ?, ?, ?)',
-      [String(s.id), userId, minutes, memo, date]
-    );
-  }
-}
-
+// 프론트 정본(canonical) 형태와 일치: { id, duration(분), memo, session_date }
 async function listByUser(userId) {
   const [rows] = await db.query(
-    'SELECT id, duration AS minutes, memo, session_date AS timestamp FROM history WHERE user_id = ? ORDER BY session_date DESC',
+    'SELECT id, duration, memo, session_date FROM history WHERE user_id = ? ORDER BY session_date DESC',
     [userId]
   );
   return rows;
+}
+
+async function createOne(userId, { duration, memo }) {
+  const id = randomUUID();
+  await db.query(
+    'INSERT INTO history (id, user_id, duration, memo, session_date) VALUES (?, ?, ?, ?, ?)',
+    [id, userId, Math.trunc(Number(duration)) || 0, memo ?? null, new Date()]
+  );
+  return id;
 }
 
 async function deleteOne(userId, id) {
@@ -35,4 +27,4 @@ async function deleteOne(userId, id) {
   return result.affectedRows;
 }
 
-module.exports = { upsertMany, listByUser, deleteOne };
+module.exports = { listByUser, createOne, deleteOne };
