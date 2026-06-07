@@ -11,9 +11,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState(
     () => localStorage.getItem("remembered_email") || "",
   );
-  const [password, setPassword] = useState(
-    () => localStorage.getItem("remembered_password") || "",
-  );
+  // 비밀번호는 절대 저장/자동입력하지 않는다(보안). 항상 빈 값에서 시작.
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(
     () => localStorage.getItem("remember_me") !== "false",
   );
@@ -36,14 +35,13 @@ export default function LoginPage() {
       // 검증 통과 → 인증 컨트롤러에 위임(영속화·화면 전환은 컨트롤러 담당)
       await login({ email, password });
 
-      // 자동 로그인 쿠키/로컬스토리지 저장 처리
+      // 이메일만 기억(편의). 비밀번호는 저장하지 않으며, 과거 평문 저장값이 있으면 제거한다.
+      localStorage.removeItem("remembered_password");
       if (rememberMe) {
         localStorage.setItem("remembered_email", email);
-        localStorage.setItem("remembered_password", password);
         localStorage.setItem("remember_me", "true");
       } else {
         localStorage.removeItem("remembered_email");
-        localStorage.removeItem("remembered_password");
         localStorage.setItem("remember_me", "false");
       }
     } catch (err) {
