@@ -25,6 +25,7 @@ async function initSchema() {
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
+    timezone: "+00:00",
   });
 
   await pool.query(`
