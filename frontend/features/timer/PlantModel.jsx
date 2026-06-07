@@ -75,7 +75,7 @@ export default function PlantModel({ totalTime, timeLeft, isRunning }) {
         muted
         playsInline
         preload="auto"
-        className="w-full h-full object-cover object-center select-none pointer-events-none"
+        className="w-full h-full object-cover object-center select-none pointer-events-none scale-[1.05]"
       />
 
       {/*원형 진행바*/}
