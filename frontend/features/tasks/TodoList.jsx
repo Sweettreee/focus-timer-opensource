@@ -32,17 +32,14 @@ export default function TodoList() {
           <h2 className="text-xs font-bold text-[#4A5D4E]/80 uppercase tracking-widest">
             Today's Focus
           </h2>
-          <p className="text-[10px] text-gray-400">
-            set your goals for this session
-          </p>
+
         </div>
         <button
           onClick={() => setIsAdding(!isAdding)}
-          className={`w-7 h-7 rounded-full flex items-center justify-center font-bold transition-all shadow-sm ${
-            isAdding
+          className={`w-7 h-7 rounded-full flex items-center justify-center font-bold transition-all shadow-sm ${isAdding
               ? "bg-amber-100 text-amber-700 rotate-45"
               : "bg-[#5A6E5D]/10 text-[#5A6E5D] hover:bg-[#5A6E5D]/20"
-          }`}
+            }`}
         >
           <Plus className="w-4 h-4" />
         </button>
@@ -102,11 +99,10 @@ export default function TodoList() {
             >
               <div className="flex items-center gap-2.5 flex-1 min-w-0">
                 <div
-                  className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                    task.checked
+                  className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${task.checked
                       ? "bg-[#6B8E23] border-[#6B8E23] text-white"
                       : "border-gray-300 group-hover:border-[#6B8E23]"
-                  }`}
+                    }`}
                 >
                   {task.checked && <Check className="w-3 h-3 stroke-[3]" />}
                 </div>
