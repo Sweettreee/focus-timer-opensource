@@ -111,11 +111,10 @@ export default function AmbientMixer() {
         {/* 재생 마스터 버튼 */}
         <button
           onClick={handleMasterToggle}
-          className={`w-full py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 mb-3 font-medium transition-all shadow-sm text-xs ${
-            isPlaying 
-              ? 'bg-amber-500/10 text-amber-700 border border-amber-200/50 hover:bg-amber-500/20' 
-              : 'bg-[#5A6E5D] text-white hover:bg-[#4A5D4E]'
-          }`}
+          className={`w-full py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 mb-3 font-medium transition-all shadow-sm text-xs ${isPlaying
+            ? 'bg-amber-500/10 text-amber-700 border border-amber-200/50 hover:bg-amber-500/20'
+            : 'bg-[#5A6E5D] text-white hover:bg-[#4A5D4E]'
+            }`}
         >
           {isPlaying ? (
             <>
@@ -156,7 +155,7 @@ export default function AmbientMixer() {
         </div>
 
         {/* 사운드 프리셋 태그 */}
-        <div className="mt-3.5">
+        <div className="mt-8">
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5 flex items-center gap-1">
             <Compass className="w-3 h-3" /> Quick Presets
           </p>
@@ -165,11 +164,10 @@ export default function AmbientMixer() {
               <button
                 key={name}
                 onClick={() => applyPreset(name)}
-                className={`text-[9px] px-2 py-0.5 rounded-md border font-medium transition-all ${
-                  activePreset === name
-                    ? 'bg-[#6B8E23]/10 text-[#6B8E23] border-[#6B8E23]/30 font-semibold'
-                    : 'bg-white/40 text-gray-500 border-gray-200/50 hover:bg-gray-50 hover:border-gray-300'
-                }`}
+                className={`text-[9px] px-2 py-0.5 rounded-md border font-medium transition-all ${activePreset === name
+                  ? 'bg-[#6B8E23]/10 text-[#6B8E23] border-[#6B8E23]/30 font-semibold'
+                  : 'bg-white/40 text-gray-500 border-gray-200/50 hover:bg-gray-50 hover:border-gray-300'
+                  }`}
               >
                 {name}
               </button>
@@ -177,8 +175,9 @@ export default function AmbientMixer() {
           </div>
         </div>
 
-        {/* 카메라 포탈 루트 - Quick Presets 바로 밑에 배치 */}
-        <div id="camera-portal-root" className="mt-3 flex justify-center w-full"></div>
+        {/* 카메라 포탈 루트 */}
+        <div id="camera-portal-root" className="mt-8 flex justify-center w-full"></div>
+
       </div>
     </div>
   );
