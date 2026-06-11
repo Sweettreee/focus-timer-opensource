@@ -23,6 +23,7 @@ init(){
     });
 }
 start(){
+    this.init();
     this.isPlaying = true;
     Object.keys(this.audios).forEach((key)=>{
         const audio = this.audios[key];
