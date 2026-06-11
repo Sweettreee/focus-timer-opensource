@@ -133,21 +133,28 @@ export default function FocusTimer() {
 
       {/* 자리비움 모달 */}
       {showModal && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm rounded-2xl animate-fadeIn transition-all">
-          <div className="bg-white/95 p-6 rounded-2xl shadow-xl flex flex-col items-center text-center max-w-[260px] border border-gray-100 pointer-events-auto">
-            <div className="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mb-4">
-              <BrainCircuit className="w-6 h-6 text-emerald-500 animate-soft-pulse" />
-            </div>
-            <h3 className="font-bold text-gray-800 text-lg mb-1 tracking-tight">TARGET LOST</h3>
-            <p className="text-xs text-gray-500 mb-5 leading-relaxed">
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-[#4A5D4E]/10 backdrop-blur-md rounded-2xl animate-fadeIn transition-all">
+          <div className="bg-white/90 backdrop-blur-xl p-8 rounded-3xl shadow-[0_20px_50px_rgba(74,93,78,0.15)] border border-white/40 flex flex-col items-center text-center max-w-[280px] pointer-events-auto transition-all duration-300">
+
+            {/* 타이틀: 세리프 체와 넓은 자간으로 고급스럽게 표현 */}
+            <h3 className="font-serif font-bold text-[#4A5D4E] text-xl tracking-widest mb-3 select-none">
+              TARGET LOST
+            </h3>
+
+            {/* 본문: 줄바꿈과 여백을 조절하여 깔끔하게 정리 */}
+            <p className="text-[11px] text-gray-500 leading-relaxed mb-6 select-none">
               자리 비움 감지로 일시 정지되었습니다.<br />
-              <span className="font-semibold text-emerald-600">돌아오시면 자동으로 재개됩니다.</span>
+              <span className="block mt-2.5 font-bold text-[#6B8E23] text-xs tracking-wide">
+                돌아오시면 자동으로 재개됩니다.
+              </span>
             </p>
+
+            {/* 버튼: 모서리를 부드럽게 하고 클릭 반응(active:scale) 추가 */}
             <button
               onClick={handleStartPause}
-              className="w-full py-2.5 bg-[#6B8E23] hover:bg-[#5A7A1D] text-white text-xs font-bold tracking-widest uppercase rounded-xl transition-colors shadow-md flex items-center justify-center gap-2"
+              className="w-full py-3 bg-[#4A5D4E] hover:bg-[#3d4d41] active:scale-[0.97] text-white text-[10px] font-bold tracking-[0.18em] uppercase rounded-xl transition-all shadow-md shadow-[#4A5D4E]/10 flex items-center justify-center gap-1.5 cursor-pointer"
             >
-              <Play className="w-3 h-3 fill-white" /> Resume Now
+              <Play className="w-2.5 h-2.5 fill-white stroke-none" /> Resume Now
             </button>
           </div>
         </div>
