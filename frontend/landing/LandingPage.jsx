@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   BrainCircuit,
   Sprout,
@@ -7,34 +7,39 @@ import {
   Users,
   Trophy,
   Medal,
-  Crown,
-} from "lucide-react";
-import Header from "../app/layout/Header";
-import { useNavController } from "../app/useNavController";
+  Crown
+} from 'lucide-react';
+import { useUser } from '../app/selectors';
+import { useAuthController } from '../features/auth/useAuthController';
+import { useNavController } from '../app/useNavController';
 
 export default function LandingPage() {
   const { goTo } = useNavController();
+  const user = useUser();
+  const { logout } = useAuthController();
+
   const [isVisible, setIsVisible] = useState(false);
 
-  // 서버 연결 전이나 에러 시 보여줄 초기 디폴트 데이터
+  // API 호출 실패 시 표시할 백업 데이터
   const [globalStats, setGlobalStats] = useState({
     totalHours: 12450,
     totalTrees: 8320,
   });
+
   const [rankings, setRankings] = useState([
-    { id: 1, nickname: "초집중모드", hours: 142, trees: 210 },
-    { id: 2, nickname: "밤샘코딩", hours: 128, trees: 185 },
-    { id: 3, nickname: "이동욱", hours: 115, trees: 160 },
-    { id: 4, nickname: "test1234", hours: 98, trees: 142 },
+    { id: 1, nickname: '초집중모드', hours: 142, trees: 210 },
+    { id: 2, nickname: '밤샘코딩', hours: 128, trees: 185 },
+    { id: 3, nickname: '이동욱', hours: 115, trees: 160 },
+    { id: 4, nickname: 'test1234', hours: 98, trees: 142 },
   ]);
 
+  // 실시간 통계 및 랭킹 로드
   useEffect(() => {
     setIsVisible(true);
 
-    // 백엔드 API에서 실시간 통계 및 랭킹 데이터 로드
-    fetch("http://localhost:4000/api/stats")
+    fetch('http://localhost:4000/api/stats')
       .then((res) => {
-        if (!res.ok) throw new Error("네트워크 응답 이상함");
+        if (!res.ok) throw new Error('서버 응답 오류');
         return res.json();
       })
       .then((data) => {
@@ -49,48 +54,108 @@ export default function LandingPage() {
         }
       })
       .catch((err) => {
-        // 서버 오프라인 시 콘솔에만 찍고 기본 디폴트 데이터 유지
-        console.warn("실시간 통계 데이터 로드 실패 (로컬 데이터 대체):", err);
+        console.warn('실시간 데이터를 불러오지 못했습니다. 로컬 데이터로 대체합니다.', err);
       });
   }, []);
 
   return (
     <div className="min-h-screen bg-[#F9F6F0] text-[#333333] flex flex-col font-sans">
-      {/* 글로벌 네비게이션 */}
-      <div className="px-6 pt-5">
-        <Header currentView="landing" />
-      </div>
-
       <main className="flex-1">
-        {/* 메인 히어로 영역 */}
+
+        {/* 비주얼 영역 */}
         <section
-          className={`flex flex-col items-center justify-center text-center px-6 py-20 transition-all duration-1000 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"}`}
+          className={`relative overflow-hidden flex flex-col items-center min-h-[550px] md:min-h-[680px] transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'
+            }`}
         >
-          <div className="w-16 h-16 rounded-full bg-[#6B8E23]/10 flex items-center justify-center text-[#6B8E23] mb-6">
-            <Sprout className="w-8 h-8" />
+          {/* 배경 동영상 */}
+          <video
+            src="/forest_movie.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover scale-[1.3] z-0"
+          />
+
+          {/*어두운 오버레이 */}
+          <div className="absolute inset-0 bg-black/45 backdrop-blur-[0.5px] z-10" />
+
+          {/* 상단 네비바 */}
+          <header className="relative z-20 flex justify-between items-center w-full py-5 px-8">
+            <div
+              className="flex flex-col items-start cursor-pointer hover:opacity-85 select-none text-white"
+              onClick={() => goTo('focus')}
+            >
+              <h1 className="text-2xl font-bold tracking-wider">FOCUS ROOM</h1>
+              <p className="text-[10px] text-white/60 uppercase tracking-widest mt-0.5">
+                your time, your growth
+              </p>
+            </div>
+
+            {/* 로그인 / 회원 정보 메뉴 */}
+            <div className="flex items-center gap-2">
+              {user ? (
+                <div className="flex items-center gap-3">
+                  <span className="text-white text-xs font-semibold select-none">
+                    {user.nickname}님
+                  </span>
+                  <button
+                    onClick={logout}
+                    className="px-3 py-1.5 text-[10px] font-bold text-white/80 hover:text-white bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl transition-all cursor-pointer"
+                  >
+                    로그아웃
+                  </button>
+                  <button
+                    onClick={() => goTo('focus')}
+                    className="px-4 py-1.5 text-[10px] font-bold text-white bg-[#6B8E23] hover:bg-[#5A7A1D] rounded-xl shadow transition-all cursor-pointer"
+                  >
+                    Go to App
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => goTo('login')}
+                    className="flex items-center gap-1.5 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl text-xs font-semibold tracking-wide cursor-pointer transition-all"
+                  >
+                    로그인
+                  </button>
+                  <button
+                    onClick={() => goTo('register')}
+                    className="flex items-center gap-1.5 px-4 py-2 bg-white text-gray-900 hover:bg-gray-100 rounded-xl text-xs font-semibold tracking-wide cursor-pointer transition-all shadow-sm"
+                  >
+                    회원가입
+                  </button>
+                </div>
+              )}
+            </div>
+          </header>
+
+          {/* 슬로건 및 시작 버튼 */}
+          <div className="relative z-20 flex-1 flex flex-col items-center justify-center text-center px-6 py-16 max-w-2xl">
+            <h1 className="font-serif font-bold text-white text-4xl md:text-6xl leading-tight mb-6 tracking-wide select-none drop-shadow-md">
+              당신의 몰입이 <br /> 한 그루의 나무가 되는 시간
+            </h1>
+
+            <p className="text-white/85 max-w-xl text-sm md:text-base leading-relaxed mb-8 font-medium select-none drop-shadow-sm">
+              FOCUS ROOM은 당신의 집중을 시각화합니다. <br />
+              AI 비전 어시스턴트의 모니터링과 고요한 앰비언트 사운드 속에서,
+              나만의 소중한 시간을 나무로 키워보세요.
+            </p>
+
+            <button
+              onClick={() => goTo('focus')}
+              className="flex items-center gap-2 px-8 py-4 bg-[#6B8E23] hover:bg-[#5A7A1D] active:scale-[0.97] text-white text-xs font-bold uppercase rounded-full shadow-lg hover:shadow-xl transition-all"
+            >
+              Start Focusing <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
-
-          <h1 className="text-3xl md:text-5xl font-bold text-[#4A5D4E] leading-tight mb-4">
-            당신의 몰입이 <br /> 한 그루의 나무가 되는 시간
-          </h1>
-
-          <p className="text-gray-500 max-w-xl text-sm leading-relaxed mb-8">
-            FOCUS ROOM은 당신의 집중을 시각화합니다. <br />
-            AI 비전 어시스턴트의 모니터링과 고요한 앰비언트 사운드 속에서,
-            나만의 소중한 시간을 나무로 키워보세요.
-          </p>
-
-          <button
-            onClick={() => goTo("focus")}
-            className="flex items-center gap-1.5 px-6 py-3.5 bg-[#4A5D4E] hover:bg-[#3d4d41] text-white text-sm font-bold rounded-full shadow transition-all hover:-translate-y-0.5"
-          >
-            Start Focusing <ChevronRight className="w-4 h-4" />
-          </button>
         </section>
 
-        {/* 3대 주요 기능 슬롯 */}
+        {/* 주요 기능 소개 */}
         <section className="bg-white/50 border-y border-gray-200 py-16 px-6">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+
             <div className="flex flex-col items-center text-center p-6 bg-white/60 rounded-xl border border-gray-100">
               <div className="w-12 h-12 rounded-full bg-[#D8C9A8]/30 flex items-center justify-center text-[#7A6A4A] mb-3">
                 <BrainCircuit className="w-6 h-6" />
@@ -129,13 +194,15 @@ export default function LandingPage() {
                 잘 맞는 최적의 집중 환경을 커스텀합니다.
               </p>
             </div>
+
           </div>
         </section>
 
-        {/* 대시보드 및 실시간 랭킹 보드 */}
+        {/* 통계 및 랭킹 대시보드 */}
         <section className="py-16 px-6 max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            {/* 좌측 글로벌 지표 */}
+
+            {/* 글로벌 통계 */}
             <div className="flex flex-col justify-center">
               <div className="flex items-center gap-1.5 mb-2 text-[#6B8E23]">
                 <Users className="w-4 h-4" />
@@ -156,7 +223,7 @@ export default function LandingPage() {
                     총 집중 시간
                   </p>
                   <p className="text-xl text-[#4A5D4E] font-bold">
-                    {globalStats.totalHours.toLocaleString()}{" "}
+                    {globalStats.totalHours.toLocaleString()}{' '}
                     <span className="text-xs text-gray-400 font-normal">
                       hrs
                     </span>
@@ -168,7 +235,7 @@ export default function LandingPage() {
                     심은 나무 수
                   </p>
                   <p className="text-xl text-[#6B8E23] font-bold">
-                    {globalStats.totalTrees.toLocaleString()}{" "}
+                    {globalStats.totalTrees.toLocaleString()}{' '}
                     <span className="text-xs text-[#6B8E23]/70 font-normal">
                       trees
                     </span>
@@ -177,7 +244,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* 우측 실시간 탑랭커 보드 */}
+            {/* 랭킹 보드 */}
             <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
               <div className="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
                 <div>
@@ -234,13 +301,13 @@ export default function LandingPage() {
                 )}
               </div>
             </div>
+
           </div>
         </section>
       </main>
 
       <footer className="text-center py-6 border-t border-gray-200 text-[10px] text-gray-400">
-        © 2026 FOCUS ROOM.Designed by Team Search(LeeDongWook JangIkJoon
-        KimJinSik).
+        © 2026 FOCUS ROOM. Designed by Team Search (LeeDongWook, JangIkJoon, KimJinSik).
       </footer>
     </div>
   );
