@@ -6,8 +6,8 @@ import FaceCamera from './FaceCamera';
 import { useSessionController } from '../history/useSessionController';
 
 export default function FocusTimer() {
-
   const { addSession } = useSessionController();
+
   //타이머 동작 관련
   const [totalTime, setTotalTime] = useState(25 * 60);
   const [timeLeft, setTimeLeft] = useState(25 * 60);
@@ -50,7 +50,7 @@ export default function FocusTimer() {
   const handleStartPause = () => {
     if (showModal) setShowModal(false);
     setIsRunning(!isRunning);
-  }
+  };
 
   const resetSessionStates = () => {
     setShowMemoOverlay(false);
@@ -81,15 +81,12 @@ export default function FocusTimer() {
     setTimeLeft(newSeconds);
   };
 
-  // 포털 엘리먼트 탐색
   useEffect(() => {
     const portalElement = document.getElementById('camera-portal-root');
     if (portalElement) {
       setCamPortal(portalElement);
       return;
     }
-
-    // 마운트 직후 1회성으로 검사
     let count = 0;
     const interval = setInterval(() => {
       const retryEl = document.getElementById('camera-portal-root');
@@ -127,7 +124,6 @@ export default function FocusTimer() {
 
   return (
     <div className="relative w-full flex-1 min-h-[500px] bg-white/60 backdrop-blur-md rounded-2xl border border-gray-200/50 flex flex-col items-center justify-between overflow-hidden shadow-sm hover:shadow-md transition-all">
-
       {/* 식물 모델 배경 */}
       <PlantModel totalTime={totalTime} timeLeft={timeLeft} isRunning={isRunning} />
 
@@ -135,21 +131,15 @@ export default function FocusTimer() {
       {showModal && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-[#4A5D4E]/10 backdrop-blur-md rounded-2xl animate-fadeIn transition-all">
           <div className="bg-white/90 backdrop-blur-xl p-8 rounded-3xl shadow-[0_20px_50px_rgba(74,93,78,0.15)] border border-white/40 flex flex-col items-center text-center max-w-[280px] pointer-events-auto transition-all duration-300">
-
-            {/* 타이틀: 세리프 체와 넓은 자간으로 고급스럽게 표현 */}
             <h3 className="font-serif font-bold text-[#4A5D4E] text-xl tracking-widest mb-3 select-none">
               TARGET LOST
             </h3>
-
-            {/* 본문: 줄바꿈과 여백을 조절하여 깔끔하게 정리 */}
             <p className="text-[11px] text-gray-500 leading-relaxed mb-6 select-none">
               자리 비움 감지로 일시 정지되었습니다.<br />
               <span className="block mt-2.5 font-bold text-[#6B8E23] text-xs tracking-wide">
                 돌아오시면 자동으로 재개됩니다.
               </span>
             </p>
-
-            {/* 버튼: 모서리를 부드럽게 하고 클릭 반응(active:scale) 추가 */}
             <button
               onClick={handleStartPause}
               className="w-full py-3 bg-[#4A5D4E] hover:bg-[#3d4d41] active:scale-[0.97] text-white text-[10px] font-bold tracking-[0.18em] uppercase rounded-xl transition-all shadow-md shadow-[#4A5D4E]/10 flex items-center justify-center gap-1.5 cursor-pointer"
@@ -206,8 +196,7 @@ export default function FocusTimer() {
           {formatTime(timeLeft)}
         </div>
 
-        <p className={`text-[11px] uppercase tracking-widest font-extrabold mt-3 flex items-center justify-center gap-1.5 select-none pointer-events-none ${isRunning ? 'text-[#6B8E23]' : 'text-gray-400'
-          }`}>
+        <p className={`text-[11px] uppercase tracking-widest font-extrabold mt-3 flex items-center justify-center gap-1.5 select-none pointer-events-none ${isRunning ? 'text-[#6B8E23]' : 'text-gray-400'}`}>
           <span className={`w-1.5 h-1.5 rounded-full ${isRunning ? 'bg-[#6B8E23] animate-soft-pulse' : 'bg-gray-300'}`}></span>
           {isRunning ? 'Focusing' : 'Paused'}
         </p>
@@ -220,8 +209,7 @@ export default function FocusTimer() {
                 <button
                   key={mins}
                   onClick={() => changeTimerPreset(mins)}
-                  className={`flex-1 py-1 text-[10px] font-bold rounded-lg transition-colors ${totalMinutes === mins ? 'bg-[#5A6E5D] text-white' : 'text-gray-500 hover:text-gray-800 hover:bg-white/60'
-                    }`}
+                  className={`flex-1 py-1 text-[10px] font-bold rounded-lg transition-colors ${totalMinutes === mins ? 'bg-[#5A6E5D] text-white' : 'text-gray-500 hover:text-gray-800 hover:bg-white/60'}`}
                 >
                   {mins}m
                 </button>
@@ -244,15 +232,14 @@ export default function FocusTimer() {
           </div>
 
           <div className="w-full border border-gray-200/60 rounded-xl p-3 flex justify-between items-center bg-white/50 backdrop-blur-sm shadow-sm transition-all duration-300">
-            <div className="flex items-center gap-2 relative">
-              <BrainCircuit className={`w-4 h-4 transition-colors ${aiEnabled ? 'text-emerald-500' : 'text-gray-400'}`} />
-              <span className={`w-1.5 h-1.5 rounded-full absolute -top-0.5 -right-0.5 ${aiEnabled ? 'bg-emerald-400 animate-soft-pulse' : 'bg-gray-300'}`}></span>
+            <div className="flex items-center gap-2">
+              <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${aiEnabled ? 'bg-emerald-500 animate-soft-pulse' : 'bg-gray-300'}`} />
               <span className="text-xs font-medium text-gray-600">AI Vision Assistant</span>
             </div>
+
             <button
               onClick={() => setAiEnabled(!aiEnabled)}
-              className={`px-3 py-1.5 rounded-md text-[10px] font-bold transition uppercase tracking-wider ${aiEnabled ? 'bg-[#F2F5E9] text-[#6B8E23]' : 'bg-gray-100 text-gray-400 hover:text-gray-600'
-                }`}
+              className={`px-3 py-1.5 rounded-md text-[10px] font-bold transition uppercase tracking-wider ${aiEnabled ? 'bg-[#F2F5E9] text-[#6B8E23]' : 'bg-gray-100 text-gray-400 hover:text-gray-600'}`}
             >
               {aiEnabled ? 'ON' : 'OFF'}
             </button>
@@ -263,7 +250,6 @@ export default function FocusTimer() {
 
       {/* 하단 오버레이 */}
       <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-end justify-center gap-12 w-full transition-all duration-300 ${isModalOpen ? 'blur-sm scale-95 opacity-80 pointer-events-none select-none' : ''}`}>
-
         {/* Reset 버튼 */}
         <div className="flex flex-col items-center gap-1.5">
           <button
@@ -304,7 +290,6 @@ export default function FocusTimer() {
           </button>
           <span className="text-[10px] font-semibold text-gray-500 select-none">End</span>
         </div>
-
       </div>
     </div>
   );
