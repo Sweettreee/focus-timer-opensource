@@ -139,7 +139,7 @@ export default function LandingPage() {
 
             <p className="text-white/85 max-w-xl text-sm md:text-base leading-relaxed mb-8 font-medium select-none drop-shadow-sm">
               FOCUS ROOM은 당신의 집중을 시각화합니다. <br />
-              AI 비전 어시스턴트의 모니터링과 고요한 앰비언트 사운드 속에서,
+              AI 비전 어시스턴트의 모니터링과 고요한 앰비언트 사운드 속에서,<br />
               나만의 소중한 시간을 나무로 키워보세요.
             </p>
 
