@@ -1,35 +1,28 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Video, VideoOff } from "lucide-react";
-//구글이 만든 인공지능 엔진 MediaPipe 웹캠 영상 속에서 사람의 눈코입을 찾아 얼굴이 있다 없다를 판별
-import { FaceDetector, FilesetResolver } from "@mediapipe/tasks-vision";
-export default function FaceCamera({
-  aiEnabled,
-  isAiPaused,
-  onFaceLost,
-  onFaceReturned,
-}) {
-  const [webcamActive, setWebcamActive] = useState(false); //카메라가 켜져 있는지 거져 있는지
-  const [isFaceDetected, setIsFaceDetected] = useState(false); //현재 화면에 얼굴이 보이는지 안보이는지
-  const [isModeLoaded, setIsModelLoaded] = useState(false); //인공지능 모델이 다운로드 완료 되었는지 아직 로딩중인지
+import React, { useState, useEffect, useRef } from 'react';
+import { Video, VideoOff } from 'lucide-react';
+import { FaceDetector, FilesetResolver } from '@mediapipe/tasks-vision';
 
-  const videoRef = useRef(null); //웹캠에서 들어오는 실시간 카메라 영상과 화면(html)을 연결해준다
-  const detectorRef = useRef(null); //AI(얼굴인식)엔진을 안전하게 보관
-  const requestRef = useRef(null); //초당 60번 도는 스캔루프를 안전하게 멈추기위해 기록하는 것
+export default function FaceCamera({ aiEnabled, isAiPaused, onFaceLost, onFaceReturned }) {
+  const [webcamActive, setWebcamActive] = useState(false);
+  const [isFaceDetected, setIsFaceDetected] = useState(false);
+  const [isModelLoaded, setIsModelLoaded] = useState(false);
 
-  const faceLostTimeRef = useRef(null); //얼굴이 안보이기 시작한 정확한 시각을 적어둠
-  const faceReturnedTimeRef = useRef(null); //얼굴이 다시 보이기 시작한 시간을 적어둠
+  const videoRef = useRef(null);
+  const detectorRef = useRef(null);
+  const requestRef = useRef(null);
 
-  //비디오 초기값을 -1로 설정해두어 아직 검사한적이 없다는 것을 확실하게 표시하고 첫 프레임을 통과시킴
+  const faceLostTimeRef = useRef(null);
+  const faceReturnedTimeRef = useRef(null);
+
   const lastVideoTimeRef = useRef(-1);
 
-  //최신 정보를 실시간으로 기록
-  const propsRef = useRef({
-    aiEnabled,
-    isAiPaused,
-    onFaceLost,
-    onFaceReturned,
-  });
-  //버튼 누르면 카메라 전원 켜기
+  // 최신 props 참조
+  const propsRef = useRef({ aiEnabled, isAiPaused, onFaceLost, onFaceReturned });
+  useEffect(() => {
+    propsRef.current = { aiEnabled, isAiPaused, onFaceLost, onFaceReturned };
+  }, [aiEnabled, isAiPaused, onFaceLost, onFaceReturned]);
+
+  // ✅ [신규] 하단 AI Vision Assistant 스위치와 웹캠 동작 연동
   useEffect(() => {
     setWebcamActive(aiEnabled);
   }, [aiEnabled]);
@@ -37,121 +30,142 @@ export default function FaceCamera({
   // 1. MediaPipe 모델 초기화
   useEffect(() => {
     const initModel = async () => {
-      //async를 통해서 await를 사용
       try {
         const vision = await FilesetResolver.forVisionTasks(
-          "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm",
-        ); //인공지능이 계산을 할 수 있도록 기반환경을 구글 서버에서 받아옴
+          "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+        );
         detectorRef.current = await FaceDetector.createFromOptions(vision, {
           baseOptions: {
-            //구글이 학습시켜둔 고성능 얼굴 인식 기능 다운로드
-            modelAssetPath:
-              "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite",
-            delegate: "GPU", //로컬의 GPU를 사용하도록 세팅,GPU는 단순 계산 수천 개를 동시에 잘 처리하므로
+            modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite",
+            delegate: "GPU"
           },
-          runningMode: "VIDEO",
+          runningMode: "VIDEO"
         });
         setIsModelLoaded(true);
       } catch (error) {
-        console.error("AI모델 로딩 실폐:", error);
+        console.error("AI 모델 로딩 실패:", error);
       }
     };
     initModel();
   }, []);
 
-  //웹캠 켜고 끄기
+  // 2. 웹캠 켜기/끄기
   useEffect(() => {
-    let stream = null; //영상데이터가 흘러갈 임시 파이프라인 준비
+    let stream = null;
     if (webcamActive) {
-      //브라우저에게 카메라 요청
-      navigator.mediaDevices
-        .getUserMedia({ video: { width: 320, height: 240 } })
+      navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } })
         .then((s) => {
-          stream = s; //성공하면 받아온 실시간 영상 데이터(s)를 파이프라인에 연결한다
-
-          //<video>에 영상파이프를 꽂아 얼굴이 나오게 만듦
+          stream = s;
           if (videoRef.current) videoRef.current.srcObject = stream;
         })
-        .catch((err) => {
-          //사용자가 카메라 권한 거부를 눌렀을 때 대비
-          console.error("카메라 권한 오류", err);
+        .catch(err => {
+          console.error("카메라 권한 오류:", err);
           setWebcamActive(false);
         });
     }
 
-    //뒷정리-끄거나 타이머 페이지 나갈시 작동
     return () => {
-      //카메라 차단:영상 파이프라인 안에 흐르는 모든 트랙 찾아서 강제로 중지시킨다.
-      if (stream) stream.getTracks().forEach((track) => track.stop());
-      //ai 루프 취소
+      if (stream) stream.getTracks().forEach(track => track.stop());
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
   }, [webcamActive]);
 
-  //3. 매 프레임 스캔
+  // 3. 매 프레임 스캔 (Race Condition 완벽 대응)
   const predictWebcam = () => {
-    //카메라가 꺼져있다면 즉시 루프 중단
+    // 카메라가 꺼져있다면 즉시 루프 중단
     if (!webcamActive) return;
-    //모델이랑 영상 태그가 다 로드되었을 때만 루프를 실행하도록 한다
-    if (detectorRef.current && videoRef.current) {
-      //ai분석기 준비되었는지 확인 및 비디오 장치 켜져 있는지 확인
-      try {
-        if (videoRef.current.currentTime !== lastVideoTimeRef.current) {
-          //비디오의 현재 재생 시간과 직전에 검사했던 시간 비교
-          lastVideoTimeRef.current = videoRef.current.currentTime;
-        }
-        const startTimeMs = performance.now(); //현재 시점의 정밀한 시간을 구함(프레임 간의 시간 간격을 파악하기 위해서)
-        //ai분석기에게 웹캠 화면과 현재시간 제공해주고 얼굴 찾으라고 요청, 얼굴 위치및 개수가 변수에 담긴다.
-        const detections = detectorRef.current.detectForVideo(
-          videoRef.current,
-          startTimeMs,
-        );
 
-        //분석 보고서라고 할수 있는 detection을 잘 보냈는지 그리고 얼굴이 감지되었는지 확인
+    // 카메라나 AI 모델이 덜 준비된 상태라면 죽지 않고 다음 프레임 예약 후 대기!
+    if (!detectorRef.current || !videoRef.current) {
+      requestRef.current = requestAnimationFrame(predictWebcam);
+      return;
+    }
+
+    // 정상 상태이므로 다음 프레임 예약 후 판별 시작
+    requestRef.current = requestAnimationFrame(predictWebcam);
+
+    try {
+      if (videoRef.current.currentTime !== lastVideoTimeRef.current) {
+        lastVideoTimeRef.current = videoRef.current.currentTime;
+
+        const startTimeMs = performance.now();
+        const detections = detectorRef.current.detectForVideo(videoRef.current, startTimeMs);
+
+        // --- 얼굴 감지 성공 ---
         if (detections && detections.detections.length > 0) {
           setIsFaceDetected(true);
-          faceLostTimeRef.current = 0; //이탈 타이머 누적 리셋
-          if (propsRef.current.aiEnabled && propsRef.current.isAiPaused) {
-            //ai기능 켜져 있고 사용자가 자리 멈춘상태
-            if (
-              faceReturnedTimeRef.current === null ||
-              faceReturnedTimeRef.current === 0
-            ) {
-              //스톱워치가 처음 켜진상태이거나,쓰다 리셋된 상태
+          faceLostTimeRef.current = null; // 자리비움 초기화
+
+          const { aiEnabled, isAiPaused, onFaceReturned } = propsRef.current;
+
+          if (aiEnabled && isAiPaused) {
+            if (!faceReturnedTimeRef.current) {
               faceReturnedTimeRef.current = Date.now();
-            } else {
-              const passedTime = Date.now() - faceReturnedTimeRef.current;
-              if (passedTime > 3000) {
-                propRef.current.onFaceReturned(); //돌아왔음을 알려줌
-                faceReturnedTimeRef.current = 0;
-              }
+            } else if (Date.now() - faceReturnedTimeRef.current > 1500) {
+              onFaceReturned();
+              faceReturnedTimeRef.current = null;
             }
           } else {
-            faceReturnedTimeRef.current = 0;
+            faceReturnedTimeRef.current = null;
           }
         }
-        //얼굴이 안보일때
+        // --- 얼굴 놓침 ---
         else {
           setIsFaceDetected(false);
-          faceReturnedTimeRef.current = 0;
+          faceReturnedTimeRef.current = null; // 돌아옴 초기화
+
           if (propsRef.current.aiEnabled) {
-            if (
-              faceLostTimeRef.current === null ||
-              faceLostTimeRef.current === 0
-            ) {
-              faceLostTimeRef.current = Date.now(); //처음 놓친 시점 적어둠
-            } else {
-              const passedTime = Date.now() - faceLostTimeRef.current; //경과 시간 계산
-              if (passedTime > 5000) {
-                propsRef.current.onFaceLost(); //5초 넘으면 이탈 처리
-                faceLostTimeRef.current = 0;
-              }
+            if (!faceLostTimeRef.current) {
+              faceLostTimeRef.current = Date.now();
+            } else if (Date.now() - faceLostTimeRef.current > 500) {
+              propsRef.current.onFaceLost();
+              faceLostTimeRef.current = null;
             }
           }
         }
-      } catch (error) {
-        console.log("프레임 스킵됨");
       }
+    } catch (error) {
+      console.warn("AI 프레임 스킵됨");
     }
   };
+
+  return (
+    <div className="w-full h-full bg-[#1A1C23] rounded-2xl overflow-hidden border border-gray-800 shadow-2xl flex flex-col justify-between group relative transition-all duration-300 z-30">
+      {webcamActive ? (
+        <video
+          ref={videoRef} autoPlay playsInline muted onLoadedData={predictWebcam}
+          className="w-full h-full object-cover scale-x-[-1]"
+        />
+      ) : (
+        <div className="w-full h-full flex flex-col items-center justify-center bg-[#1A1C23] text-gray-500 p-2 text-[10px] text-center gap-1">
+          <VideoOff className="w-5 h-5 opacity-40 text-gray-400" />
+          <span>Camera Off</span>
+        </div>
+      )}
+
+      {/* 오버레이 UI */}
+      <div className="absolute inset-0 flex flex-col justify-between p-2 pointer-events-none bg-gradient-to-t from-black/80 via-transparent to-black/40 overflow-hidden">
+        <div className="flex justify-between items-start">
+          <span className="text-[7px] font-mono text-white/80 bg-black/60 px-1 rounded-sm tracking-wider tabular-nums">
+            {!isModelLoaded ? 'LOADING AI...' : webcamActive ? 'FEED ACTIVE' : 'NO FEED'}
+          </span>
+          <span className={`w-1.5 h-1.5 rounded-full ${!webcamActive ? 'bg-gray-500' : isFaceDetected ? 'bg-emerald-500 animate-pulse' : 'bg-red-500 animate-ping'}`}></span>
+        </div>
+        {webcamActive && (
+          <div className="text-[7px] text-emerald-400 font-mono leading-tight bg-black/40 px-1 py-0.5 rounded backdrop-blur-sm w-fit transition-opacity duration-300">
+            TARGET: {isFaceDetected ? 'LOCKED' : 'LOST'}
+          </div>
+        )}
+      </div>
+
+      {/* 토글 버튼 */}
+      <button
+        onClick={() => setWebcamActive(!webcamActive)}
+        disabled={!isModelLoaded}
+        className="absolute bottom-1.5 right-1.5 p-1.5 bg-white/10 hover:bg-white/90 text-white hover:text-gray-900 rounded-md pointer-events-auto transition backdrop-blur-md opacity-0 group-hover:opacity-100 shadow-lg"
+      >
+        {webcamActive ? <VideoOff className="w-3 h-3" /> : <Video className="w-3 h-3" />}
+      </button>
+    </div>
+  );
 }
