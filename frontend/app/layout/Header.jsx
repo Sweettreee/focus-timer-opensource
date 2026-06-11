@@ -21,29 +21,38 @@ export default function Header({ currentView }) {
         <p className="text-[11px] text-gray-400 mt-0.5">your time, your growth</p>
       </div>
 
-      {/* 상단 간이 통계 */}
-      <div className="flex items-center justify-center gap-6 px-4 py-2 bg-gray-50 rounded-xl border border-gray-200/50 my-1 md:my-0">
+      {/* 통계 요약 영역 (가운데 정렬) */}
+      <div className="flex items-center justify-center gap-5 md:gap-7 select-none px-3 py-1.5 bg-gray-50/50 rounded-xl border border-gray-200/20 shadow-[inset_0_1px_2px_rgba(0,0,0,0.01)] my-1 md:my-0">
+        {/* TODAY FOCUS */}
         <div className="text-center px-1">
-          <p className="text-[#8C867A] text-[9px] font-bold">TODAY FOCUS</p>
-          <p className="font-semibold text-gray-800 text-sm mt-0.5">
+          <p className="text-[#8C867A] text-[8.5px] uppercase tracking-[0.18em] font-semibold">
+            TODAY FOCUS
+          </p>
+          <p className="font-serif italic font-medium text-gray-800 text-[15px] mt-0.5">
             {stats.todayFocus}
           </p>
         </div>
         
-        <div className="w-[1px] h-5 bg-gray-300"></div>
+        <div className="w-[1px] h-6 bg-gray-300/40"></div>
         
+        {/* SESSIONS */}
         <div className="text-center px-1">
-          <p className="text-[#8C867A] text-[9px] font-bold">SESSIONS</p>
-          <p className="font-semibold text-gray-800 text-sm mt-0.5">
+          <p className="text-[#8C867A] text-[8.5px] uppercase tracking-[0.18em] font-semibold">
+            SESSIONS
+          </p>
+          <p className="font-serif italic font-medium text-gray-800 text-[15px] mt-0.5">
             {stats.sessions}
           </p>
         </div>
         
-        <div className="w-[1px] h-5 bg-gray-300"></div>
+        <div className="w-[1px] h-6 bg-gray-300/40"></div>
         
+        {/* STREAK */}
         <div className="text-center px-1">
-          <p className="text-[#8C867A] text-[9px] font-bold">STREAK</p>
-          <p className="font-semibold text-gray-800 text-sm mt-0.5">
+          <p className="text-[#8C867A] text-[8.5px] uppercase tracking-[0.18em] font-semibold">
+            STREAK
+          </p>
+          <p className="font-serif italic font-medium text-gray-800 text-[15px] mt-0.5">
             {stats.streak}d
           </p>
         </div>
@@ -132,3 +141,4 @@ export default function Header({ currentView }) {
     </header>
   );
 }
+
