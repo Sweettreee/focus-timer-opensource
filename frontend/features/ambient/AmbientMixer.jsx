@@ -177,15 +177,8 @@ export default function AmbientMixer() {
           </div>
         </div>
 
-        {/* [신규] 카메라 포탈 루트 - Quick Presets 바로 밑에 배치 */}
+        {/* 카메라 포탈 루트 - Quick Presets 바로 밑에 배치 */}
         <div id="camera-portal-root" className="mt-3 flex justify-center w-full"></div>
-      </div>
-
-      {/* 하단 감성적인 명언 */}
-      <div className="mt-4 pt-2 border-t border-gray-100/80">
-        <p className="text-[11px] italic text-gray-400 font-serif leading-relaxed text-center">
-          "The quiet you cultivate now becomes the life you build."
-        </p>
       </div>
     </div>
   );
