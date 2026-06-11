@@ -25,11 +25,9 @@ export default function SessionCards() {
     <div className="bg-white/60 backdrop-blur-md rounded-2xl p-5 shadow-sm border border-gray-100 flex flex-col min-h-[200px]">
       <div className="mb-3">
         <h2 className="text-xs font-bold text-[#4A5D4E]/80 uppercase tracking-widest flex items-center gap-1">
-          <NotebookPen className="w-3.5 h-3.5 text-[#6B8E23]" /> Session Cards
+          Session Cards
         </h2>
-        <p className="text-[10px] text-gray-400">
-          your focus sessions, newest first
-        </p>
+
       </div>
 
       {!user ? (
