@@ -11,12 +11,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState(
     () => localStorage.getItem("remembered_email") || "",
   );
-  const [password, setPassword] = useState(
-    () => localStorage.getItem("remembered_password") || "",
-  );
-  const [rememberMe, setRememberMe] = useState(
-    () => localStorage.getItem("remember_me") !== "false",
-  );
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
@@ -33,19 +28,11 @@ export default function LoginPage() {
     setError("");
 
     try {
-      // 검증 통과 → 인증 컨트롤러에 위임(영속화·화면 전환은 컨트롤러 담당)
       await login({ email, password });
 
-      // 자동 로그인 쿠키/로컬스토리지 저장 처리
-      if (rememberMe) {
-        localStorage.setItem("remembered_email", email);
-        localStorage.setItem("remembered_password", password);
-        localStorage.setItem("remember_me", "true");
-      } else {
-        localStorage.removeItem("remembered_email");
-        localStorage.removeItem("remembered_password");
-        localStorage.setItem("remember_me", "false");
-      }
+      localStorage.removeItem("remembered_password");
+      localStorage.setItem("remembered_email", email);
+      localStorage.setItem("remember_me", "true");
     } catch (err) {
       setError(err.message || "로그인 중 오류가 발생했습니다.");
     }
@@ -128,17 +115,6 @@ export default function LoginPage() {
                 <label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
                   비밀번호
                 </label>
-                <button
-                  type="button"
-                  onClick={() =>
-                    alert(
-                      "🔑 임시 알림: 가입하신 이메일로 비밀번호 재설정 메일이 전송되었습니다.",
-                    )
-                  }
-                  className="text-[9px] text-[#6B8E23] hover:text-[#4A5D4E] hover:underline tracking-wide"
-                >
-                  비밀번호 찾기 ›
-                </button>
               </div>
               <input
                 type="password"
@@ -148,25 +124,6 @@ export default function LoginPage() {
                 className="bg-transparent border-b border-dashed border-gray-300 focus:border-[#6B8E23] outline-none py-2 text-xs text-[#333333] transition-colors w-full font-mono"
                 placeholder="••••••••"
               />
-            </div>
-
-            {/* 자동 로그인 토글 */}
-            <div
-              className="flex items-start gap-2.5 cursor-pointer select-none py-1 group"
-              onClick={() => setRememberMe(!rememberMe)}
-            >
-              <div
-                className={`w-3.5 h-3.5 mt-0.5 rounded border border-dashed flex items-center justify-center text-[10px] transition ${
-                  rememberMe
-                    ? "border-[#6B8E23] bg-[#6B8E23]/10 text-[#6B8E23] font-bold"
-                    : "border-gray-300 bg-white/20 text-transparent"
-                }`}
-              >
-                ✓
-              </div>
-              <span className="text-[10px] text-gray-400 group-hover:text-gray-500 leading-normal tracking-wide transition-colors">
-                자동 로그인 · 로그인 상태를 30일간 유지합니다.
-              </span>
             </div>
 
             {/* 에러 메시지 */}
