@@ -22,7 +22,7 @@ export default function FaceCamera({ aiEnabled, isAiPaused, onFaceLost, onFaceRe
     propsRef.current = { aiEnabled, isAiPaused, onFaceLost, onFaceReturned };
   }, [aiEnabled, isAiPaused, onFaceLost, onFaceReturned]);
 
-  // ✅ [신규] 하단 AI Vision Assistant 스위치와 웹캠 동작 연동
+  // AI Vision Assistant 스위치와 웹캠 동작 연동
   useEffect(() => {
     setWebcamActive(aiEnabled);
   }, [aiEnabled]);
