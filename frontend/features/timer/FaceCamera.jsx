@@ -101,7 +101,7 @@ export default function FaceCamera({ aiEnabled, isAiPaused, onFaceLost, onFaceRe
           if (aiEnabled && isAiPaused) {
             if (!faceReturnedTimeRef.current) {
               faceReturnedTimeRef.current = Date.now();
-            } else if (Date.now() - faceReturnedTimeRef.current > 1500) {
+            } else if (Date.now() - faceReturnedTimeRef.current > 2000) {
               onFaceReturned();
               faceReturnedTimeRef.current = null;
             }
@@ -117,7 +117,7 @@ export default function FaceCamera({ aiEnabled, isAiPaused, onFaceLost, onFaceRe
           if (propsRef.current.aiEnabled) {
             if (!faceLostTimeRef.current) {
               faceLostTimeRef.current = Date.now();
-            } else if (Date.now() - faceLostTimeRef.current > 500) {
+            } else if (Date.now() - faceLostTimeRef.current >3000) {
               propsRef.current.onFaceLost();
               faceLostTimeRef.current = null;
             }
